@@ -33,8 +33,9 @@ DOMAINS="$("${MYSQL[@]}" -e "SELECT name FROM i_domains WHERE active=1" 2>/dev/n
 
 if ! cmp -s "$TMP" "$CONF" 2>/dev/null; then
     mv "$TMP" "$CONF"
-    chown www-data:amavis "$CONF" 2>/dev/null || true
-    chmod 644 "$CONF"
+    # amavis 要求配置文件属主为 root
+    chown root:amavis "$CONF" 2>/dev/null || true
+    chmod 640 "$CONF"
     echo "[sync-dkim] config updated"
     # amavis 只在运行中才需要重载；-o 只对最老的进程（master）发信号
     if pgrep -u amavis -f amavisd >/dev/null 2>&1; then

@@ -235,8 +235,9 @@ sed -e "s|__DOMAIN__|${DOMAIN}|g" -e "s|__MAIL_HOSTNAME__|${MAIL_HOSTNAME}|g" \
 
 ln -sfn /ewomail/dkim/amavis-dkim.conf /etc/amavis/conf.d/60-ewomail-dkim
 touch /ewomail/dkim/amavis-dkim.conf
-chown www-data:amavis /ewomail/dkim/amavis-dkim.conf
-chmod 644 /ewomail/dkim/amavis-dkim.conf
+# amavis 要求配置文件属主为 root，否则拒绝启动
+chown root:amavis /ewomail/dkim/amavis-dkim.conf
+chmod 640 /ewomail/dkim/amavis-dkim.conf
 
 # ---------- 后台配置 ----------
 CFG=/ewomail/www/ewomail-admin/core/config.php

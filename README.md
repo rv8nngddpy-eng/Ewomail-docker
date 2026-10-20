@@ -91,6 +91,9 @@ maximal_backoff_time   = 1h
 | `amavisd-new -f` | `Error in parsing command line options: -f` | 改用 `amavisd-new foreground` |
 | `/var/log` 为宿主机挂载目录 | rsyslog 无写权限，日志为空 | 启动时创建并授权 `mail.log` / `syslog` / `nginx` |
 | ClamAV 首次加载特征库 | 650M 上限下被 OOM Kill | 上限提到 1400M，并要求 1G 机器加 swap |
+| `$childs_per_interval` | Amavis 2.13 已移除该变量，启动报 `requires explicit package name` | 从 `50-user` 模板删除 |
+| Amavis 配置文件属主 | `60-ewomail-dkim should be owned by root` | 改为 `root:amavis 640` |
+| Dovecot SQL 认证 | `Unknown database driver 'mysql'`，IMAP/SMTP 认证全失败 | 镜像增加 `dovecot-mysql` 包 |
 
 ---
 

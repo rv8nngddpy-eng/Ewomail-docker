@@ -10,6 +10,7 @@ RUN printf '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d \
 RUN apt-get update && apt-get install -y --no-install-recommends \
         postfix postfix-mysql postfix-policyd-spf-python \
         dovecot-core dovecot-imapd dovecot-pop3d dovecot-lmtpd dovecot-sieve \
+        dovecot-mysql \
         amavisd-new spamassassin spamc libmail-dkim-perl libmail-spf-perl \
         libnet-dns-perl \
         nginx php8.1-fpm php8.1-mysql php8.1-curl php8.1-mbstring \
