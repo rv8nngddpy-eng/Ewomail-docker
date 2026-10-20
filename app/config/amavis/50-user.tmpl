@@ -1,0 +1,53 @@
+use strict;
+
+# ---------------------------------------------------------------------------
+# EwoMail Docker 版 Amavis 配置模板
+# __DOMAIN__ / __MAIL_HOSTNAME__ 由 /entrypoint.sh 在启动时替换
+# ---------------------------------------------------------------------------
+
+$mydomain   = '__DOMAIN__';
+$myhostname = '__MAIL_HOSTNAME__';
+
+@local_domains_acl = ( [".$mydomain", "$mydomain"] );
+
+$inet_socket_port = 10024;
+$inet_socket_bind = '127.0.0.1';
+
+$forward_method = 'smtp:127.0.0.1:10025';
+$notify_method  = 'smtp:127.0.0.1:10025';
+
+$max_servers          = 2;
+$childs_per_interval  = 2;
+$max_requests         = 20;
+$log_level            = 1;
+
+$sa_tag_level_deflt   = 2.0;
+$sa_tag2_level_deflt  = 5.0;
+$sa_kill_level_deflt  = 8.0;
+$sa_dsn_cutoff_level  = 10.0;
+$sa_spam_subject_tag  = '***SPAM*** ';
+$sa_mail_body_size_limit = 2*1024*1024;
+
+$final_virus_destiny      = D_DISCARD;
+$final_banned_destiny     = D_DISCARD;
+$final_spam_destiny       = D_PASS;
+$final_bad_header_destiny = D_PASS;
+
+$virus_quarantine_to = 'virus-quarantine';
+$spam_quarantine_to  = 'spam-quarantine';
+$bad_header_quarantine_to = 'bad-header-quarantine';
+
+# 只保留 ClamAV，禁用会走外网的第三方扫描器，避免阻塞投递
+@av_scanners = (
+    ['ClamAV-clamd',
+      \&ask_daemon, ["CONTSCAN {}\n", "clamav:3310"],
+      qr/\bOK$/m, qr/\bFOUND$/m,
+      qr/^.*?: (?!Infected Archive)(.*) FOUND$/m ],
+);
+
+@av_scanners_backup = ();
+
+# 出站邮件也做 DKIM 签名（密钥由 sync-dkim.sh 生成，见 60-ewomail-dkim）
+$enable_dkim_verification = 1;
+
+1;

@@ -1,0 +1,2 @@
+# 允许 www-data 仅执行邮件相关的运维脚本（无需密码）
+www-data ALL=(root) NOPASSWD: /opt/ewomail/bin/dkim.sh, /opt/ewomail/bin/update-mail-config.sh
